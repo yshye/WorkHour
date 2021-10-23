@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:mini_calendar/mini_calendar.dart';
 
 class WorkInfo {
@@ -10,10 +11,12 @@ class WorkInfo {
   DateTime? endTime;
 
   /// 加班工时
-  num? overWorkHour;
+  late num overWorkHour;
 
   /// 请假工时
-  num? leaveHour;
+  late num leaveHour;
+
+  String? objectId;
 
   WorkInfo({
     this.username,
@@ -21,15 +24,17 @@ class WorkInfo {
     this.date,
     this.beginTime,
     this.endTime,
-    this.overWorkHour,
-    this.leaveHour,
+    this.overWorkHour = 0,
+    this.leaveHour = 0,
+    this.objectId,
   });
 
-  fromJson(Map<String, dynamic> json) {
+  WorkInfo.fromJson(Map<String, dynamic> json) {
     username = json['username'];
     dateType = json['dateType'];
-    overWorkHour = json['overWorkHour'];
-    leaveHour = json['leaveHour'];
+    overWorkHour = json['overWorkHour'] ?? 0;
+    leaveHour = json['leaveHour'] ?? 0;
+    objectId = json['objectId'];
     if (json.containsKey('date')) {
       date = DateTime.tryParse(json['date']['iso']);
     }
@@ -41,8 +46,19 @@ class WorkInfo {
     }
   }
 
+  Map<String, dynamic> toJson() => {
+        'username': username,
+        'dateType': dateType,
+        'overWorkHour': overWorkHour,
+        'leaveHour': leaveHour,
+        'date': date,
+        'beginTime': beginTime,
+        'endTime': endTime,
+        'objectId': objectId,
+      };
+
   /// 新增post或修改put的数据
-  toCreate() => {
+  Map<String, dynamic> toCreate() => {
         "username": username,
         "dateType": dateType,
         "date": {"__type": "Date", "iso": date?.toIso8601String()},

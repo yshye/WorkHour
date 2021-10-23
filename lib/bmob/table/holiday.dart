@@ -1,4 +1,5 @@
 import 'package:work_hour/bmob/bmob.dart';
+import 'package:work_hour/common/global.dart';
 
 class YearHoliday {
   List<Holiday>? oldHolidays;
@@ -13,7 +14,7 @@ class YearHoliday {
           ?.map((e) => {
                 "method": "DELETE",
                 "path": "/1/classes/holidays/${e.objectId}",
-                "token": Bmob.token,
+                "token": Global.init().token,
                 "body": {}
               })
           .toList() ??
