@@ -8,6 +8,4 @@ class Bmob {
     Bmob.appId = appId;
     Bmob.masterKey = masterKey;
   }
-
-
 }

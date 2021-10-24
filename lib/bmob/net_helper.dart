@@ -4,7 +4,7 @@ import 'package:mini_logger/mini_logger.dart';
 import 'package:work_hour/bmob/bmob.dart';
 import 'package:work_hour/bmob/table/work_info.dart';
 import 'package:work_hour/common/global.dart';
-import 'package:work_hour/pages/work_hour/model.dart';
+import 'package:work_hour/pages/month_hour/model.dart';
 
 import 'table/user.dart';
 
@@ -69,6 +69,26 @@ class BmobNetHelper {
       L.e(e);
     }
     return {};
+  }
+
+  static Future<List<WorkInfo>> workHourList(DateMonth month) async{
+    try{
+      DateDay _begin = DateDay(month.year, month.month - 1, 26);
+      DateDay _end = DateDay(month.year, month.month, 25);
+      var response = await dio.get(
+        "/1/classes/work_infos",
+        queryParameters: {
+          'where':
+          '{"date":{"\$gt":{"__type": "Date","iso": "${_begin.toString()} 00:00:00"},"\$lt":{"__type": "Date","iso": "${_end.toString()} 00:00:00"}},'
+              '"username":"${Global.init().username}"}'
+        },
+      );
+      List list = response.data['results'];
+      return list.map((e) => WorkInfo.fromJson(e)).toList();
+    }on DioError catch(e){
+      L.e(e);
+    }
+    return [];
   }
 
   static Future<MonthHourStatistics> getHourStatistics(DateMonth month) async {

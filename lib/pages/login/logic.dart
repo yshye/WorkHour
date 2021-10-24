@@ -33,7 +33,7 @@ class LoginLogic extends GetxController {
     }
     Global.init().user = user;
     Global.init().login = true;
-    Get.offAndToNamed(RouteConfig.workHour);
+    Get.offAndToNamed(RouteConfig.monthHour);
   }
 
   @override

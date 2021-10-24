@@ -3,7 +3,7 @@ import 'package:mini_calendar/mini_calendar.dart';
 import 'package:work_hour/bmob/net_helper.dart';
 import 'package:work_hour/bmob/table/work_info.dart';
 
-import 'model.dart';
+import '../month_hour/model.dart';
 
 class WorkHourLogic extends GetxController {
   late MonthOption<WorkInfo> option;
@@ -11,6 +11,7 @@ class WorkHourLogic extends GetxController {
   MonthHourStatistics? statistics;
   Map<DateDay, WorkInfo> marks = {};
   late DateMonth month;
+  List<WorkInfo> workInfoList = [];
 
   @override
   void onInit() {
@@ -22,6 +23,20 @@ class WorkHourLogic extends GetxController {
       enableMultiple: false,
     );
     super.onInit();
+  }
+
+  void changeMonth(DateMonth month) async{
+    this.month = month;
+
+    BmobNetHelper.workHourList(month).then((value) {
+      workInfoList = value;
+      update();
+    });
+
+    BmobNetHelper.getHourStatistics(month).then((value) {
+      statistics = value;
+      update();
+    });
   }
 
   void getWorkInfo(DateMonth _month) {
@@ -38,5 +53,9 @@ class WorkHourLogic extends GetxController {
       statistics = value;
       update();
     });
+  }
+
+  void getStatistics(DateDay _day) {
+    if (_day.day > 25) {}
   }
 }

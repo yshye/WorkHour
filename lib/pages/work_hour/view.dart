@@ -10,13 +10,20 @@ import 'package:work_hour/widgets/day_info_widget.dart';
 
 import 'logic.dart';
 
-class WorkHourPage extends StatelessWidget {
+
+
+
+class WorkHourPage extends StatefulWidget {
   const WorkHourPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final logic = Get.put(WorkHourLogic());
+  _WorkHourPageState createState() => _WorkHourPageState();
+}
 
+class _WorkHourPageState extends State<WorkHourPage> {
+  final logic = Get.put(WorkHourLogic());
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Work Hour"),
@@ -31,7 +38,33 @@ class WorkHourPage extends StatelessWidget {
           )
         ],
       ),
-      body: Column(
+      body: context.isPhone
+          ? Column(
+              children: [
+                _buildCalendar(),
+                _buildWorkHour(),
+              ],
+            )
+          : Row(
+              children: [
+                _buildCalendar(),
+                _buildWorkHour(),
+              ],
+            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+
+
+  Widget _buildCalendar() {
+    double? width = context.isPhone ? null : 500;
+    return Container(
+      width: width,
+      child: Column(
         children: [
           GetBuilder<WorkHourLogic>(
             init: logic,
@@ -73,6 +106,7 @@ class WorkHourPage extends StatelessWidget {
           ),
           MonthPageView<WorkInfo>(
             logic.option,
+            width: width,
             onCreated: (controller) {
               logic.controller = controller;
               logic.getWorkInfo(logic.option.currentMonth!);
@@ -105,19 +139,18 @@ class WorkHourPage extends StatelessWidget {
               );
             },
           ),
-          GetBuilder<WorkHourLogic>(
-            init: logic,
-            builder: (logic) {
-              return DayInfoWidget(logic.option.currentDay!,
-                  info: logic.marks[logic.option.currentDay]);
-            },
-          ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-      ),
+    );
+  }
+
+  Widget _buildWorkHour() {
+    return GetBuilder<WorkHourLogic>(
+      init: logic,
+      builder: (logic) {
+        return DayInfoWidget(logic.option.currentDay!,
+            info: logic.marks[logic.option.currentDay]);
+      },
     );
   }
 }

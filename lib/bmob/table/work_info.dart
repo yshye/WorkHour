@@ -30,14 +30,12 @@ class WorkInfo {
   });
 
   WorkInfo.fromJson(Map<String, dynamic> json) {
+    date = DateTime.parse(json['date']['iso']);
     username = json['username'];
     dateType = json['dateType'];
     overWorkHour = json['overWorkHour'] ?? 0;
     leaveHour = json['leaveHour'] ?? 0;
     objectId = json['objectId'];
-    if (json.containsKey('date')) {
-      date = DateTime.tryParse(json['date']['iso']);
-    }
     if (json.containsKey("beginTime")) {
       beginTime = DateTime.tryParse(json['beginTime']['iso']);
     }

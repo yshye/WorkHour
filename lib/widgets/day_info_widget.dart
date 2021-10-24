@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/context_extensions.dart';
 import 'package:mini_calendar/mini_calendar.dart';
 import 'package:mini_logger/mini_logger.dart';
 import 'package:work_hour/bmob/table/work_info.dart';
@@ -11,13 +12,19 @@ class DayInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double? width = context.isPhone ? null : 500;
     return Container(
       color: Colors.white,
+      width: width,
       child: Column(
         children: [
-          Center(child: Padding(
+          Center(
+              child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(day.toString(),style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+            child: Text(
+              day.toString(),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
           )),
           const Divider(height: 1),
           Row(children: [

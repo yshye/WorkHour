@@ -4,9 +4,6 @@ class MonthHourStatistics {
   /// 工作日\休息日\法定节假日加班总和
   num sum1 = 0, sum2 = 0, sum3 = 0;
 
-  /// 工作日\休息日\法定节假日考勤日总数
-  // int count1 = 0, count2 = 0, count3 = 0;
-
   /// 请假总和
   num leave = 0;
 
