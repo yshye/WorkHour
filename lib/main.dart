@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
       child: GetMaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(primarySwatch: Colors.blue),
+        debugShowCheckedModeBanner: false,
         getPages: RouteConfig.getPages,
         initialRoute: RouteConfig.home,
       ),

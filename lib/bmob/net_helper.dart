@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:mini_calendar/mini_calendar.dart';
 import 'package:mini_logger/mini_logger.dart';
 import 'package:work_hour/bmob/bmob.dart';
+import 'package:work_hour/bmob/table/holiday.dart';
 import 'package:work_hour/bmob/table/work_info.dart';
 import 'package:work_hour/common/global.dart';
 import 'package:work_hour/pages/month_hour/model.dart';
@@ -80,7 +81,8 @@ class BmobNetHelper {
         queryParameters: {
           'where':
               '{"date":{"\$gt":{"__type": "Date","iso": "${_begin.toString()} 00:00:00"},"\$lt":{"__type": "Date","iso": "${_end.toString()} 23:59:59"}},'
-                  '"username":"${Global.init().username}"}'
+                  '"username":"${Global.init().username}"}',
+          'order':'-date'
         },
       );
       List list = response.data['results'];
@@ -152,5 +154,10 @@ class BmobNetHelper {
       L.e(e);
     }
     return MonthHourStatistics([]);
+  }
+
+  static Future<YearHoliday> getYearHoliday() async{
+
+    return YearHoliday(oldHolidays: []);
   }
 }

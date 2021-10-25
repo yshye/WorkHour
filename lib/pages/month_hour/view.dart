@@ -16,6 +16,9 @@ import 'logic.dart';
 import 'package:mini_calendar/mini_calendar.dart';
 
 class MonthHourPage extends StatelessWidget {
+  final TextStyle titleStyle =
+      const TextStyle(fontSize: 16, fontWeight: FontWeight.bold);
+
   const MonthHourPage({Key? key}) : super(key: key);
 
   @override
@@ -24,11 +27,25 @@ class MonthHourPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: defaultBuildMonthHead(
-          context,
-          logic.month,
-          onLast: logic.last,
-          onNext: logic.next,
+        leading: prefUtil.user!.userName == '27017'
+            ? IconButton(
+                onPressed: () {
+                  Get.toNamed(RouteConfig.holidaySetting);
+                },
+                color: Colors.blue,
+                icon: const Icon(MdiIcons.tableSettings),
+              )
+            : null,
+        title: GetBuilder<MonthHourLogic>(
+          init: logic,
+          builder: (logic) {
+            return defaultBuildMonthHead(
+              context,
+              logic.month,
+              onLast: logic.last,
+              onNext: logic.next,
+            );
+          },
         ),
         backgroundColor: Colors.white,
         actions: [
@@ -50,7 +67,7 @@ class MonthHourPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Padding(
-                padding: EdgeInsets.only(left: 10, top: 5, bottom: 5),
+                padding: EdgeInsets.only(left: 10, top: 15, bottom: 5),
                 child: Text(
                   ' 月度统计',
                   style: TextStyle(
@@ -64,56 +81,17 @@ class MonthHourPage extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 15),
                 child: Row(
                   children: [
-                    Container(
-                      width: 2,
-                      color: Colors.grey[300],
-                      height: 20,
-                    ),
+                    Container(width: 2, color: Colors.grey[300], height: 18),
                     Text(
-                      ' 基础16，工作日️×1.5，周末×2，节假日×3。',
-                      style: TextStyle(color: Colors.grey[400], fontSize: 16),
+                      '  基础16，工作日️×1.5，周末×2，节假日×3。',
+                      style: TextStyle(color: Colors.grey[400], fontSize: 14),
                     )
                   ],
                 ),
               ),
-              DataTable(
-                columns: const [
-                  DataColumn(label: Text("工作日")),
-                  DataColumn(label: Text("休息日"), numeric: true),
-                  DataColumn(label: Text("节假日"), numeric: true),
-                  DataColumn(label: Text("请假"), numeric: true),
-                  DataColumn(label: Text("合计(¥)"), numeric: true),
-                ],
-                rows: [
-                  DataRow(cells: [
-                    DataCell(Text(
-                      logic.statistics.sum1.toString(),
-                      style: const TextStyle(color: Colors.blueGrey),
-                    )),
-                    DataCell(Text(
-                      logic.statistics.sum2.toString(),
-                      style: const TextStyle(color: Colors.green),
-                    )),
-                    DataCell(Text(
-                      logic.statistics.sum3.toString(),
-                      style: const TextStyle(color: Colors.blue),
-                    )),
-                    DataCell(Text(
-                      logic.statistics.leave.toString(),
-                      style: const TextStyle(color: Colors.pink),
-                    )),
-                    DataCell(Text(
-                      logic.statistics.price.toString(),
-                      style: const TextStyle(color: Colors.orange),
-                    )),
-                  ]),
-                ],
-              ),
+              _buildStatistics(titleStyle, logic),
               Container(
-                color: Colors.white,
-                height: 10,
-                width: double.infinity,
-              ),
+                  color: Colors.white, height: 15, width: double.infinity),
               const Padding(
                 padding: EdgeInsets.only(left: 10, top: 5, bottom: 5),
                 child: Text(
@@ -126,23 +104,21 @@ class MonthHourPage extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(top: 8.0),
                 child: Table(
-                  children: const [
+                  children: [
                     TableRow(children: [
                       Text("日期",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16)),
-                      Text("加班",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16)),
-                      Text("请假",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16)),
+                          textAlign: TextAlign.center, style: titleStyle),
+                      Text("加班(h)",
+                          textAlign: TextAlign.center, style: titleStyle),
+                      Text("请假(h)",
+                          textAlign: TextAlign.center, style: titleStyle),
                       Text("编辑",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16)),
-                    ])
+                          textAlign: TextAlign.center, style: titleStyle),
+                    ]),
+                    const TableRow(
+                        children: [Divider(), Divider(), Divider(), Divider()]),
                   ],
                 ),
               ),
@@ -167,6 +143,87 @@ class MonthHourPage extends StatelessWidget {
     );
   }
 
+  Padding _buildStatistics(TextStyle titleStyle, MonthHourLogic logic) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 0.0, bottom: 8.0),
+      child: Table(
+        children: [
+          TableRow(children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("工作日(h)",
+                  textAlign: TextAlign.center, style: titleStyle),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("休息日(h)",
+                  textAlign: TextAlign.center, style: titleStyle),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("节假日(h)",
+                  textAlign: TextAlign.center, style: titleStyle),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child:
+                  Text("请假(h)", textAlign: TextAlign.center, style: titleStyle),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child:
+                  Text("合计(¥)", textAlign: TextAlign.center, style: titleStyle),
+            ),
+          ]),
+          const TableRow(children: [
+            Divider(height: 1),
+            Divider(height: 1),
+            Divider(height: 1),
+            Divider(height: 1),
+            Divider(height: 1),
+          ]),
+          TableRow(children: [
+            Container(
+              height: 40,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(8.0),
+              child: Text(logic.statistics.sum1.toString(),
+                  style: const TextStyle(color: Colors.blueGrey)),
+            ),
+            Container(
+              height: 40,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(8.0),
+              child: Text(logic.statistics.sum2.toString(),
+                  style: const TextStyle(color: Colors.green)),
+            ),
+            Container(
+              height: 40,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(8.0),
+              child: Text(logic.statistics.sum3.toString(),
+                  style: const TextStyle(color: Colors.blue)),
+            ),
+            Container(
+              height: 40,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(8.0),
+              child: Text(logic.statistics.leave.toString(),
+                  style: const TextStyle(color: Colors.pink)),
+            ),
+            Container(
+              height: 40,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(8.0),
+              child: Text(logic.statistics.price.toString(),
+                  style: const TextStyle(color: Colors.orange)),
+            ),
+          ]),
+        ],
+      ),
+    );
+  }
+
   Widget _buildWorkHourList(BuildContext context, MonthHourLogic logic) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
@@ -176,8 +233,9 @@ class MonthHourPage extends StatelessWidget {
                   Container(
                     height: 40,
                     alignment: Alignment.center,
-                    padding: EdgeInsets.only(left: 10),
+                    padding: const EdgeInsets.only(left: 10),
                     child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
                           DateDay.dateTime(day.date!).toString(),
@@ -228,6 +286,7 @@ class MonthHourPage extends StatelessWidget {
                     height: 40,
                     alignment: Alignment.center,
                     child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
                           icon: const Icon(
@@ -250,90 +309,9 @@ class MonthHourPage extends StatelessWidget {
             .toList(),
       ),
     );
-
-    // return SingleChildScrollView(
-    //   scrollDirection: Axis.vertical,
-    //   child: DataTable(
-    //     columns: const [
-    //       DataColumn(label: Text("日期")),
-    //       DataColumn(label: Text("加班"), numeric: true),
-    //       DataColumn(label: Text("请假"), numeric: true),
-    //       DataColumn(label: Text("编辑"), numeric: true),
-    //     ],
-    //     rows: logic.workInfoList
-    //         .map((day) => DataRow(cells: [
-    //       DataCell(
-    //         Row(
-    //           children: [
-    //             Text(
-    //               DateDay.dateTime(day.date!).toString(),
-    //             ),
-    //             Container(
-    //               margin: const EdgeInsets.all(8),
-    //               decoration: BoxDecoration(
-    //                 shape: BoxShape.rectangle,
-    //                 borderRadius: BorderRadius.circular(4),
-    //                 color: day.dateType == 1
-    //                     ? Colors.green
-    //                     : day.dateType == 2
-    //                     ? Colors.blue
-    //                     : Colors.blueGrey,
-    //               ),
-    //               child: Text(
-    //                 day.dateType == 1
-    //                     ? ' 休 '
-    //                     : day.dateType == 2
-    //                     ? ' 节 '
-    //                     : ' 工 ',
-    //                 style: const TextStyle(
-    //                     color: Colors.white, fontSize: 12),
-    //               ),
-    //             )
-    //           ],
-    //         ),
-    //       ),
-    //       DataCell(
-    //         Text(
-    //           day.overWorkHour > 0
-    //               ? day.overWorkHour.toString()
-    //               : '',
-    //           style: const TextStyle(color: Colors.green),
-    //         ),
-    //       ),
-    //       DataCell(Text(
-    //         day.leaveHour > 0
-    //             ? day.leaveHour.toString()
-    //             : '',
-    //         style: const TextStyle(color: Colors.red),
-    //       )),
-    //       DataCell(
-    //         Row(
-    //           children: [
-    //             IconButton(
-    //               icon: const Icon(
-    //                 MdiIcons.circleEditOutline,
-    //                 color: Colors.blue,
-    //               ),
-    //               onPressed: () =>
-    //                   editWorkHour(context, day, logic),
-    //             ),
-    //             IconButton(
-    //                 icon: const Icon(
-    //                   MdiIcons.close,
-    //                   color: Colors.red,
-    //                 ),
-    //                 onPressed: () => _deleteWorkInfo(
-    //                     context, day, logic)),
-    //           ],
-    //         ),
-    //       ),
-    //     ]))
-    //         .toList(),
-    //   ),
-    // );
   }
 
-  void editWorkHour(
+  Future<void> editWorkHour(
       BuildContext context, WorkInfo day, MonthHourLogic logic) async {
     var info = await showWorkHourDialog(context, day);
     if (info != null) {
