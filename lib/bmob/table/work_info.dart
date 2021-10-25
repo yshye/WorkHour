@@ -10,6 +10,8 @@ class WorkInfo {
   DateTime? beginTime;
   DateTime? endTime;
 
+  get dateStr => date.toString().substring(0, 10);
+
   /// 加班工时
   late num overWorkHour;
 
@@ -59,9 +61,22 @@ class WorkInfo {
   Map<String, dynamic> toCreate() => {
         "username": username,
         "dateType": dateType,
-        "date": {"__type": "Date", "iso": date?.toIso8601String()},
-        "beginTime": {"__type": "Date", "iso": beginTime?.toIso8601String()},
-        "endTime": {"__type": "Date", "iso": endTime?.toIso8601String()},
+        "date": {
+          "__type": "Date",
+          "iso": dateStr+" 00:00:00"
+        },
+        if (beginTime != null) ...{
+          "beginTime": {
+            "__type": "Date",
+            "iso": beginTime?.toIso8601String().replaceAll("T", ' ')
+          },
+        },
+        if (endTime != null) ...{
+          "endTime": {
+            "__type": "Date",
+            "iso": endTime?.toIso8601String().replaceAll("T", ' ')
+          },
+        },
         "overWorkHour": overWorkHour,
         "leaveHour": leaveHour,
       };

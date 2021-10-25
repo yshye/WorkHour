@@ -19,7 +19,7 @@ class BmobNetHelper {
         headers: {
           "X-Bmob-Application-Id": Bmob.appId,
           "X-Bmob-REST-API-Key": Bmob.apiKey,
-          // "X-Bmob-Master-Key": Bmob.masterKey,
+          "X-Bmob-Master-Key": Bmob.masterKey,
         },
         connectTimeout: 3000,
         receiveTimeout: 10000,
@@ -57,7 +57,7 @@ class BmobNetHelper {
         "/1/classes/work_infos",
         queryParameters: {
           'where':
-              '{"date":{"\$gt":{"__type": "Date","iso": "${_begin.toString()} 00:00:00"},"\$lt":{"__type": "Date","iso": "${_end.toString()} 00:00:00"}},'
+              '{"date":{"\$gt":{"__type": "Date","iso": "${_begin.toString()} 00:00:00"},"\$lt":{"__type": "Date","iso": "${_end.toString()} 23:59:59"}},'
                   '"username":"${Global.init().username}"}'
         },
       );
@@ -71,24 +71,63 @@ class BmobNetHelper {
     return {};
   }
 
-  static Future<List<WorkInfo>> workHourList(DateMonth month) async{
-    try{
+  static Future<List<WorkInfo>> workHourList(DateMonth month) async {
+    try {
       DateDay _begin = DateDay(month.year, month.month - 1, 26);
       DateDay _end = DateDay(month.year, month.month, 25);
       var response = await dio.get(
         "/1/classes/work_infos",
         queryParameters: {
           'where':
-          '{"date":{"\$gt":{"__type": "Date","iso": "${_begin.toString()} 00:00:00"},"\$lt":{"__type": "Date","iso": "${_end.toString()} 00:00:00"}},'
-              '"username":"${Global.init().username}"}'
+              '{"date":{"\$gt":{"__type": "Date","iso": "${_begin.toString()} 00:00:00"},"\$lt":{"__type": "Date","iso": "${_end.toString()} 23:59:59"}},'
+                  '"username":"${Global.init().username}"}'
         },
       );
       List list = response.data['results'];
       return list.map((e) => WorkInfo.fromJson(e)).toList();
-    }on DioError catch(e){
+    } on DioError catch (e) {
       L.e(e);
     }
     return [];
+  }
+
+  static Future<bool> deleteWorkInfo(String objectId) async {
+    try {
+      var response = await dio.delete("/1/classes/work_infos/$objectId");
+      return response.data['msg'] == 'ok';
+    } on DioError catch (e) {
+      L.e(e);
+    }
+    return false;
+  }
+
+  static Future<bool> addWorkInfo(WorkInfo info) async {
+    try {
+      L.i(info.toCreate());
+      var response = await dio.post("/1/classes/work_infos",data: info.toCreate());
+      Map<String,dynamic> data = response.data;
+      if(data.containsKey('objectId')){
+        return true;
+      }
+    } on DioError catch (e) {
+      L.e(e);
+    }
+    return false;
+  }
+
+  static Future<bool> changeWorkInfo(WorkInfo info) async{
+    try {
+      L.d("/1/classes/work_infos/${info.objectId}");
+      L.d(info.toCreate());
+      var response = await dio.put("/1/classes/work_infos/${info.objectId}",data: info.toCreate());
+      Map<String,dynamic> data = response.data;
+      if(data.containsKey('updatedAt')){
+        return true;
+      }
+    } on DioError catch (e) {
+      L.e(e);
+    }
+    return false;
   }
 
   static Future<MonthHourStatistics> getHourStatistics(DateMonth month) async {
@@ -99,7 +138,7 @@ class BmobNetHelper {
         "/1/classes/work_infos",
         queryParameters: {
           'where':
-              '{"date":{"\$gt":{"__type": "Date","iso": "${_begin.toString()} 00:00:00"},"\$lt":{"__type": "Date","iso": "${_end.toString()} 00:00:00"}},'
+              '{"date":{"\$gt":{"__type": "Date","iso": "${_begin.toString()} 00:00:00"},"\$lt":{"__type": "Date","iso": "${_end.toString()} 23:59:59"}},'
                   '"username":"${Global.init().username}"}',
           'sum': 'leaveHour,overWorkHour',
           'groupby': 'dateType',
