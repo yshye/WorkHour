@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mini_calendar/mini_calendar.dart';
@@ -39,7 +41,7 @@ class _DayPickerDialogState extends State<DayPickerDialog> {
     return BottomSheetDialog(
       title: Text(widget.title ?? '选择日期',
           style: const TextStyle(fontSize: 18, color: Color(0xff63728f))),
-      height: context.width + 40,
+      height: context.width + (Platform.isWindows ? 80 : 40),
       padding: const EdgeInsets.all(8),
       children: [
         MonthPageView<String>(
@@ -69,7 +71,7 @@ class _DayPickerDialogState extends State<DayPickerDialog> {
           },
         )
       ],
-      onClose: () => Get.back(result: null),
+      onClose: () => Get.back(),
       onOk: () {
         bool enable = (widget.minDay == null ||
                 DateDay.dateTime(widget.minDay!) <= _day) &&

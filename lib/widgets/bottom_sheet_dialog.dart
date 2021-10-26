@@ -57,7 +57,7 @@ class BottomSheetDialog extends StatelessWidget {
                                   style: TextStyle(
                                       color: Colors.black54, fontSize: 18)),
                               padding: const EdgeInsets.all(5),
-                              onPressed: () => onClose ?? Get.back(),
+                              onPressed: onClose ?? Get.back,
                             ),
                       ),
                       Container(
