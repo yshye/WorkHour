@@ -58,7 +58,7 @@ class BmobNetHelper {
         "/1/classes/work_infos",
         queryParameters: {
           'where':
-              '{"date":{"\$gt":{"__type": "Date","iso": "${_begin.toString()} 00:00:00"},"\$lt":{"__type": "Date","iso": "${_end.toString()} 23:59:59"}},'
+              '{"date":{"\$gte":{"__type": "Date","iso": "${_begin.toString()} 00:00:00"},"\$lte":{"__type": "Date","iso": "${_end.toString()} 23:59:59"}},'
                   '"username":"${Global.init().username}"}'
         },
       );
@@ -80,7 +80,7 @@ class BmobNetHelper {
         "/1/classes/work_infos",
         queryParameters: {
           'where':
-              '{"date":{"\$gt":{"__type": "Date","iso": "${_begin.toString()} 00:00:00"},"\$lt":{"__type": "Date","iso": "${_end.toString()} 23:59:59"}},'
+              '{"date":{"\$gte":{"__type": "Date","iso": "${_begin.toString()} 00:00:00"},"\$lte":{"__type": "Date","iso": "${_end.toString()} 23:59:59"}},'
                   '"username":"${Global.init().username}"}',
           'order':'-date'
         },
@@ -140,7 +140,7 @@ class BmobNetHelper {
         "/1/classes/work_infos",
         queryParameters: {
           'where':
-              '{"date":{"\$gt":{"__type": "Date","iso": "${_begin.toString()} 00:00:00"},"\$lt":{"__type": "Date","iso": "${_end.toString()} 23:59:59"}},'
+              '{"date":{"\$gte":{"__type": "Date","iso": "${_begin.toString()} 00:00:00"},"\$lte":{"__type": "Date","iso": "${_end.toString()} 23:59:59"}},'
                   '"username":"${Global.init().username}"}',
           'sum': 'leaveHour,overWorkHour',
           'groupby': 'dateType',

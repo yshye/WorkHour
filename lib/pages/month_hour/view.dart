@@ -9,6 +9,7 @@ import 'package:work_hour/bmob/net_helper.dart';
 import 'package:work_hour/bmob/table/work_info.dart';
 import 'package:work_hour/common/global.dart';
 import 'package:work_hour/dialog/add_work_hour/view.dart';
+import 'package:work_hour/dialog/alert_dialog.dart';
 import 'package:work_hour/pages/route_config.dart';
 import 'package:work_hour/utils/pref_util.dart';
 
@@ -151,28 +152,28 @@ class MonthHourPage extends StatelessWidget {
           TableRow(children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("工作日(h)",
+              child: Text("工作日\n(h)",
                   textAlign: TextAlign.center, style: titleStyle),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("休息日(h)",
+              child: Text("休息日\n(h)",
                   textAlign: TextAlign.center, style: titleStyle),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("节假日(h)",
+              child: Text("节假日\n(h)",
                   textAlign: TextAlign.center, style: titleStyle),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child:
-                  Text("请假(h)", textAlign: TextAlign.center, style: titleStyle),
+                  Text("请假\n(h)", textAlign: TextAlign.center, style: titleStyle),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child:
-                  Text("合计(¥)", textAlign: TextAlign.center, style: titleStyle),
+                  Text("合计\n(¥)", textAlign: TextAlign.center, style: titleStyle),
             ),
           ]),
           const TableRow(children: [
@@ -237,9 +238,6 @@ class MonthHourPage extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          DateDay.dateTime(day.date!).toString(),
-                        ),
                         Container(
                           margin: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
@@ -260,7 +258,10 @@ class MonthHourPage extends StatelessWidget {
                             style: const TextStyle(
                                 color: Colors.white, fontSize: 12),
                           ),
-                        )
+                        ),
+                        Text(
+                          day.dateStr.substring(5),
+                        ),
                       ],
                     ),
                   ),
@@ -285,24 +286,24 @@ class MonthHourPage extends StatelessWidget {
                   Container(
                     height: 40,
                     alignment: Alignment.center,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            MdiIcons.circleEditOutline,
-                            color: Colors.blue,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(MdiIcons.circleEditOutline,
+                                color: Colors.blue),
+                            onPressed: () => editWorkHour(context, day, logic),
+                            padding: EdgeInsets.zero,
                           ),
-                          onPressed: () => editWorkHour(context, day, logic),
-                        ),
-                        IconButton(
-                            icon: const Icon(
-                              MdiIcons.close,
-                              color: Colors.red,
-                            ),
-                            onPressed: () =>
-                                _deleteWorkInfo(context, day, logic)),
-                      ],
+                          IconButton(
+                            icon: const Icon(MdiIcons.close, color: Colors.red),
+                            onPressed: () => _deleteWorkInfo(context, day, logic),
+                            padding: EdgeInsets.zero,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ]))
@@ -330,28 +331,12 @@ class MonthHourPage extends StatelessWidget {
       }
       if (logic.workInfoList
           .any((element) => element.dateStr == info.dateStr)) {
-        showCupertinoDialog(
-            context: context,
-            builder: (_) {
-              return CupertinoAlertDialog(
-                title: const Text(
-                  "⚠️ 警告",
-                  style: TextStyle(color: Colors.red),
-                ),
-                content: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("${info.dateStr}的记录已经存在，不可重新添加！"),
-                ),
-                actions: [
-                  CupertinoDialogAction(
-                    onPressed: () {
-                      Get.back();
-                    },
-                    child: const Text('知道了'),
-                  ),
-                ],
-              );
-            });
+        showMessageDialog(
+          context,
+          title: "⚠️ 警告",
+          message: "${info.dateStr}的记录已经存在，不可重新添加！",
+          titleStyle: const TextStyle(color: Colors.red),
+        );
         return;
       }
       BmobNetHelper.addWorkInfo(info).then((value) {
@@ -368,49 +353,24 @@ class MonthHourPage extends StatelessWidget {
   /// 删除工时记录
   Future<void> _deleteWorkInfo(
       BuildContext context, WorkInfo day, MonthHourLogic logic) async {
-    showCupertinoDialog(
-      context: context,
-      builder: (_) {
-        return CupertinoAlertDialog(
-          title: const Text(
-            "⚠️ 警告",
-            style: TextStyle(color: Colors.red),
-          ),
-          content: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text("确认删除${day.date.toString().substring(0, 11)}的记录？"),
-          ),
-          actions: [
-            CupertinoDialogAction(
-              onPressed: () {
-                Get.back();
-              },
-              child: const Text('取消'),
-            ),
-            CupertinoDialogAction(
-              isDestructiveAction: true,
-              onPressed: () async {
-                var success = await BmobNetHelper.deleteWorkInfo(day.objectId!);
-                if (success) {
-                  showToast("删除成功！");
-                  logic.changeMonth(logic.month);
-                  Get.back();
-                } else {
-                  showToast(
-                    '删除失败！',
-                    textStyle: const TextStyle(
-                      color: Colors.red,
-                    ),
-                  );
-                }
-              },
-              child: const Text(
-                '确认',
-              ),
-            )
-          ],
-        );
-      },
+    var flag = await showOkDialog(
+      context,
+      title: "⚠️ 警告",
+      titleStyle: const TextStyle(color: Colors.red),
+      message: "确认删除${day.dateStr}的记录？",
     );
+    if (flag == 1) {
+      var success = await BmobNetHelper.deleteWorkInfo(day.objectId!);
+      if (success) {
+        showToast("删除成功！");
+        logic.changeMonth(logic.month);
+        Get.back();
+      } else {
+        showToast(
+          '删除失败！',
+          textStyle: const TextStyle(color: Colors.red),
+        );
+      }
+    }
   }
 }

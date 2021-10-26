@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mini_logger/mini_logger.dart';
@@ -32,6 +33,28 @@ class AddWorkHourComponent extends StatelessWidget {
           required: true,
           onTap: () => _selectDate(context, logic),
           isEdit: _info.objectId == null,
+        ),
+        buildTagSelectCell(
+          context,
+          '加班类型',
+          isEdit: false,
+          child: GetBuilder<AddWorkHourLogic>(
+              init: logic,
+              builder: (logic) {
+                return CupertinoSegmentedControl(
+                  onValueChanged: (int value) {
+                    logic.workInfo.dateType = value;
+                    logic.update();
+                  },
+                  children: const {
+                    0: Text("工作日"),
+                    1: Text("休息日"),
+                    2: Text("节假日"),
+                  },
+                  groupValue: logic.workInfo.dateType,
+                );
+              }),
+          required: true,
         ),
         EditCell(
           data: EditValueModel(

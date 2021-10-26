@@ -39,7 +39,7 @@ class _DayPickerDialogState extends State<DayPickerDialog> {
     return BottomSheetDialog(
       title: Text(widget.title ?? '选择日期',
           style: const TextStyle(fontSize: 18, color: Color(0xff63728f))),
-      height: context.width,
+      height: context.width + 40,
       padding: const EdgeInsets.all(8),
       children: [
         MonthPageView<String>(

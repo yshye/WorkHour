@@ -11,8 +11,9 @@ class AddWorkHourLogic extends GetxController {
   set workInfo(WorkInfo info) {
     _workInfo = info;
     dateController.text = info.date?.toString().substring(0, 11) ?? '';
-    leaveController.text = info.leaveHour.toString();
-    overtimeController.text = info.overWorkHour.toString();
+    leaveController.text = info.leaveHour > 0 ? info.leaveHour.toString() : '';
+    overtimeController.text =
+        info.overWorkHour > 0 ? info.overWorkHour.toString() : '';
   }
 
   WorkInfo get workInfo => _workInfo;

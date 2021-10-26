@@ -1,16 +1,13 @@
-import 'package:flutter/foundation.dart';
-import 'package:mini_calendar/mini_calendar.dart';
-
 class WorkInfo {
   String? username;
 
   /// 考勤日类型：0-工作日，1-周末，2-法定节假日
-  int? dateType;
+  int dateType;
   DateTime? date;
   DateTime? beginTime;
   DateTime? endTime;
 
-  get dateStr => date.toString().substring(0, 10);
+  String get dateStr => date.toString().substring(0, 10);
 
   /// 加班工时
   late num overWorkHour;
@@ -22,7 +19,7 @@ class WorkInfo {
 
   WorkInfo({
     this.username,
-    this.dateType,
+    this.dateType = 0,
     this.date,
     this.beginTime,
     this.endTime,
@@ -31,19 +28,21 @@ class WorkInfo {
     this.objectId,
   });
 
-  WorkInfo.fromJson(Map<String, dynamic> json) {
-    date = DateTime.parse(json['date']['iso']);
-    username = json['username'];
-    dateType = json['dateType'];
-    overWorkHour = json['overWorkHour'] ?? 0;
-    leaveHour = json['leaveHour'] ?? 0;
-    objectId = json['objectId'];
-    if (json.containsKey("beginTime")) {
-      beginTime = DateTime.tryParse(json['beginTime']['iso']);
-    }
-    if (json.containsKey("endTime")) {
-      endTime = DateTime.tryParse(json['endTime']['iso']);
-    }
+  factory WorkInfo.fromJson(Map<String, dynamic> json) {
+    return WorkInfo(
+      date: DateTime.parse(json['date']['iso']),
+      username: json['username'],
+      dateType: json['dateType'],
+      overWorkHour: json['overWorkHour'] ?? 0,
+      leaveHour: json['leaveHour'] ?? 0,
+      objectId: json['objectId'],
+      beginTime: json.containsKey('beginTime')
+          ? DateTime.tryParse(json['beginTime']['iso'])
+          : null,
+      endTime: json.containsKey('endTime')
+          ? DateTime.tryParse(json['endTime']['iso'])
+          : null,
+    );
   }
 
   Map<String, dynamic> toJson() => {
@@ -61,10 +60,7 @@ class WorkInfo {
   Map<String, dynamic> toCreate() => {
         "username": username,
         "dateType": dateType,
-        "date": {
-          "__type": "Date",
-          "iso": dateStr+" 00:00:00"
-        },
+        "date": {"__type": "Date", "iso": dateStr + " 08:00:00"},
         if (beginTime != null) ...{
           "beginTime": {
             "__type": "Date",

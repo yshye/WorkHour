@@ -71,10 +71,7 @@ flutter:
   assets:
     - assets/images/background/
     - assets/images/logo/
-    - assets/images/menu/
     - assets/svg/
-    - assets/icon/
-    - assets/images/chock/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
