@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.leadchina.work_hour.work_hour">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="work_hour"
         android:icon="@mipmap/ic_launcher">
