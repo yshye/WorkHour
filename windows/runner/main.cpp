@@ -26,8 +26,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
 
   FlutterWindow window(project);
   Win32Window::Point origin(100, 50);
-  Win32Window::Size size(400, 800);
-  if (!window.CreateAndShow(L"work_hour", origin, size)) {
+  Win32Window::Size size(450, 800);
+  if (!window.CreateAndShow(L"Work Hour", origin, size)) {
     return EXIT_FAILURE;
   }
   window.SetQuitOnClose(true);
