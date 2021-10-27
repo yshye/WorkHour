@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mini_logger/mini_logger.dart';
 import 'package:oktoast/oktoast.dart';
@@ -18,7 +17,7 @@ import 'package:mini_calendar/mini_calendar.dart';
 
 class MonthHourPage extends StatelessWidget {
   final TextStyle titleStyle =
-      const TextStyle(fontSize: 16, fontWeight: FontWeight.bold);
+  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold);
 
   const MonthHourPage({Key? key}) : super(key: key);
 
@@ -30,12 +29,12 @@ class MonthHourPage extends StatelessWidget {
       appBar: AppBar(
         leading: prefUtil.user!.userName == '27017'
             ? IconButton(
-                onPressed: () {
-                  Get.toNamed(RouteConfig.holidaySetting);
-                },
-                color: Colors.blue,
-                icon: const Icon(MdiIcons.tableSettings),
-              )
+          onPressed: () {
+            Get.toNamed(RouteConfig.holidaySetting);
+          },
+          color: Colors.blue,
+          icon: const Icon(MdiIcons.tableSettings),
+        )
             : null,
         title: GetBuilder<MonthHourLogic>(
           init: logic,
@@ -52,7 +51,9 @@ class MonthHourPage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Global.init().login = false;
+              Global
+                  .init()
+                  .login = false;
               Get.offAndToNamed(RouteConfig.login);
             },
             icon: const Icon(Icons.exit_to_app_sharp),
@@ -167,13 +168,13 @@ class MonthHourPage extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child:
-                  Text("请假\n(h)", textAlign: TextAlign.center, style: titleStyle),
+              child: Text("请假\n(h)",
+                  textAlign: TextAlign.center, style: titleStyle),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child:
-                  Text("合计\n(¥)", textAlign: TextAlign.center, style: titleStyle),
+              child: Text("合计\n(¥)",
+                  textAlign: TextAlign.center, style: titleStyle),
             ),
           ]),
           const TableRow(children: [
@@ -230,90 +231,92 @@ class MonthHourPage extends StatelessWidget {
       scrollDirection: Axis.vertical,
       child: Table(
         children: logic.workInfoList
-            .map((day) => TableRow(children: [
-                  Container(
-                    height: 40,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            borderRadius: BorderRadius.circular(4),
-                            color: day.dateType == 1
-                                ? Colors.green
-                                : day.dateType == 2
-                                    ? Colors.blue
-                                    : Colors.blueGrey,
-                          ),
-                          child: Text(
-                            day.dateType == 1
-                                ? ' 休 '
-                                : day.dateType == 2
-                                    ? ' 节 '
-                                    : ' 工 ',
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 12),
-                          ),
-                        ),
-                        Text(
-                          day.dateStr.substring(5),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: 40,
-                    alignment: Alignment.center,
-                    child: Text(
-                      day.overWorkHour > 0 ? day.overWorkHour.toString() : '',
-                      style: const TextStyle(color: Colors.green),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    height: 40,
-                    alignment: Alignment.center,
-                    child: Text(
-                      day.leaveHour > 0 ? day.leaveHour.toString() : '',
-                      style: const TextStyle(color: Colors.red),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    height: 40,
-                    alignment: Alignment.center,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(MdiIcons.circleEditOutline,
-                                color: Colors.blue),
-                            onPressed: () => editWorkHour(context, day, logic),
-                            padding: EdgeInsets.zero,
-                          ),
-                          IconButton(
-                            icon: const Icon(MdiIcons.close, color: Colors.red),
-                            onPressed: () => _deleteWorkInfo(context, day, logic),
-                            padding: EdgeInsets.zero,
-                          ),
-                        ],
+            .map((day) =>
+            TableRow(children: [
+              Container(
+                height: 40,
+                alignment: Alignment.center,
+                padding: const EdgeInsets.only(left: 10),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(4),
+                        color: day.dateType == 1
+                            ? Colors.green
+                            : day.dateType == 2
+                            ? Colors.blue
+                            : Colors.blueGrey,
+                      ),
+                      child: Text(
+                        day.dateType == 1
+                            ? ' 休 '
+                            : day.dateType == 2
+                            ? ' 节 '
+                            : ' 工 ',
+                        style: const TextStyle(
+                            color: Colors.white, fontSize: 12),
                       ),
                     ),
+                    Text(
+                      day.dateStr.substring(5),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                height: 40,
+                alignment: Alignment.center,
+                child: Text(
+                  day.overWorkHour > 0 ? day.overWorkHour.toString() : '—',
+                  style: const TextStyle(color: Colors.green),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Container(
+                height: 40,
+                alignment: Alignment.center,
+                child: Text(
+                  day.leaveHour > 0 ? day.leaveHour.toString() : '—',
+                  style: const TextStyle(color: Colors.red),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Container(
+                height: 40,
+                alignment: Alignment.center,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(MdiIcons.circleEditOutline,
+                            color: Colors.blue),
+                        onPressed: () => editWorkHour(context, day, logic),
+                        padding: EdgeInsets.zero,
+                      ),
+                      IconButton(
+                        icon: const Icon(MdiIcons.close, color: Colors.red),
+                        onPressed: () =>
+                            _deleteWorkInfo(context, day, logic),
+                        padding: EdgeInsets.zero,
+                      ),
+                    ],
                   ),
-                ]))
+                ),
+              ),
+            ]))
             .toList(),
       ),
     );
   }
 
-  Future<void> editWorkHour(
-      BuildContext context, WorkInfo day, MonthHourLogic logic) async {
+  Future<void> editWorkHour(BuildContext context, WorkInfo day,
+      MonthHourLogic logic) async {
     var info = await showWorkHourDialog(context, day);
     if (info != null) {
       L.i(info.toJson());
@@ -351,8 +354,8 @@ class MonthHourPage extends StatelessWidget {
   }
 
   /// 删除工时记录
-  Future<void> _deleteWorkInfo(
-      BuildContext context, WorkInfo day, MonthHourLogic logic) async {
+  Future<void> _deleteWorkInfo(BuildContext context, WorkInfo day,
+      MonthHourLogic logic) async {
     var flag = await showOkDialog(
       context,
       title: "⚠️ 警告",
