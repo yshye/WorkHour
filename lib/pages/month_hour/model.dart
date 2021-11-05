@@ -14,7 +14,7 @@ class MonthHourStatistics {
     items = list.map((e) => StatisticsItem.fromJson(e)).toList();
   }
 
-  List<StatisticsItem> get items => _items;
+    List<StatisticsItem> get items => _items;
 
   set items(List<StatisticsItem> items) {
     _items = items;

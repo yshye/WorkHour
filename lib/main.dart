@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mini_bmob/mini_bmob.dart';
+import 'package:mini_logger/mini_logger.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:work_hour/pages/route_config.dart';
-
-import 'bmob/bmob.dart';
 import 'utils/pref_util.dart';
 
 void main() async {
   await PrefUtil.init();
-  Bmob.initMasterKey(
-    "b29b32c1dd21890eb764bc87837f8378",
-    "cabdb96816af918376e6b995f610c341",
-    "0f722971aae6e69907e684a175bcc2c6",
+  BmobConfig.init(
+    '7a8b44edc6bbf3a56e2e7f3f105485a2',
+    'acadad3c7f4b9c6a86b842bc6cd4c80f',
+    masterKey: '0e1d5a4a090e9cba9be2400e30aacdc7',
+    printError: (log, _) => L.e(log),
+    printResponse: (log, _) => L.d(log),
   );
   runApp(const MyApp());
 }

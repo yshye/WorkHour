@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mini_logger/mini_logger.dart';
-import 'package:oktoast/oktoast.dart';
-import 'package:work_hour/bmob/table/work_info.dart';
+import 'package:work_hour/bmob/tables/work_info.dart';
 import 'package:work_hour/widgets/bottom_sheet_dialog.dart';
 import 'package:work_hour/widgets/tag_edit_cell.dart';
 import 'package:work_hour/widgets/tag_select_cell.dart';
@@ -12,7 +10,7 @@ import '../day_picker_dialog.dart';
 import 'logic.dart';
 
 class AddWorkHourComponent extends StatelessWidget {
-  final WorkInfo _info;
+  final WorkInfoTable _info;
 
   const AddWorkHourComponent(this._info, {Key? key}) : super(key: key);
 
@@ -86,10 +84,6 @@ class AddWorkHourComponent extends StatelessWidget {
         ),
       ],
       onOk: () {
-        if (logic.workInfo.date == null) {
-          showToast("请选择日期！");
-          return;
-        }
         logic.workInfo.leaveHour =
             num.tryParse(logic.leaveController.text) ?? 0;
         logic.workInfo.overWorkHour =
@@ -101,7 +95,7 @@ class AddWorkHourComponent extends StatelessWidget {
 
   void _selectDate(BuildContext context, AddWorkHourLogic logic) async {
     var day = await showDayDialog(
-        context, logic.workInfo.date ?? DateTime.now(),
+        context, logic.workInfo.date,
         title: "选择考勤日期");
     if (day != null) {
       logic.workInfo.date = day;
@@ -110,9 +104,9 @@ class AddWorkHourComponent extends StatelessWidget {
   }
 }
 
-Future<WorkInfo?> showWorkHourDialog(
-    BuildContext context, WorkInfo info) async {
-  return await showModalBottomSheet<WorkInfo>(
+Future<WorkInfoTable?> showWorkHourDialog(
+    BuildContext context, WorkInfoTable info) async {
+  return await showModalBottomSheet<WorkInfoTable>(
     context: context,
     builder: (_) => AddWorkHourComponent(info),
     isScrollControlled: true,

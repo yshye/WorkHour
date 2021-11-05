@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:oktoast/oktoast.dart';
-import 'package:work_hour/bmob/net_helper.dart';
-import 'package:work_hour/common/global.dart';
+import 'package:work_hour/bmob/tables/user.dart';
 import 'package:work_hour/pages/route_config.dart';
+import 'package:work_hour/utils/pref_util.dart';
 
 class LoginLogic extends GetxController {
   final TextEditingController usernameController = TextEditingController();
@@ -11,8 +11,7 @@ class LoginLogic extends GetxController {
 
   @override
   void onInit() {
-    usernameController.text = Global.init().username ?? '';
-    passwordController.text = Global.init().password ?? '';
+    usernameController.text = prefUtil.username;
     super.onInit();
   }
 
@@ -25,14 +24,15 @@ class LoginLogic extends GetxController {
       showToast("密码不可为空！");
       return;
     }
-    var user = await BmobNetHelper.login(
-        usernameController.text, passwordController.text);
-    if (user == null) {
+    UserTable _user = UserTable(
+        username: usernameController.text, password: passwordController.text);
+    var flag = await _user.login();
+    if(!flag){
       showToast("账户或密码错误！");
       return;
     }
-    Global.init().user = user;
-    Global.init().login = true;
+    prefUtil.username = _user.username!;
+    prefUtil.login = true;
     Get.offAndToNamed(RouteConfig.monthHour);
   }
 

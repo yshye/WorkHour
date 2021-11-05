@@ -6,6 +6,7 @@ import 'package:mini_logger/mini_logger.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:work_hour/bmob/net_helper.dart';
 import 'package:work_hour/bmob/table/work_info.dart';
+import 'package:work_hour/bmob/tables/work_info.dart';
 import 'package:work_hour/common/global.dart';
 import 'package:work_hour/dialog/add_work_hour/view.dart';
 import 'package:work_hour/dialog/alert_dialog.dart';
@@ -17,7 +18,7 @@ import 'package:mini_calendar/mini_calendar.dart';
 
 class MonthHourPage extends StatelessWidget {
   final TextStyle titleStyle =
-  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold);
+      const TextStyle(fontSize: 16, fontWeight: FontWeight.bold);
 
   const MonthHourPage({Key? key}) : super(key: key);
 
@@ -27,14 +28,14 @@ class MonthHourPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leading: prefUtil.user!.userName == '27017'
+        leading: prefUtil.username == '27017'
             ? IconButton(
-          onPressed: () {
-            Get.toNamed(RouteConfig.holidaySetting);
-          },
-          color: Colors.blue,
-          icon: const Icon(MdiIcons.tableSettings),
-        )
+                onPressed: () {
+                  Get.toNamed(RouteConfig.holidaySetting);
+                },
+                color: Colors.blue,
+                icon: const Icon(MdiIcons.tableSettings),
+              )
             : null,
         title: GetBuilder<MonthHourLogic>(
           init: logic,
@@ -51,9 +52,7 @@ class MonthHourPage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Global
-                  .init()
-                  .login = false;
+              prefUtil.login = false;
               Get.offAndToNamed(RouteConfig.login);
             },
             icon: const Icon(Icons.exit_to_app_sharp),
@@ -133,8 +132,8 @@ class MonthHourPage extends StatelessWidget {
         onPressed: () {
           editWorkHour(
               context,
-              WorkInfo(
-                username: prefUtil.user!.userName,
+              WorkInfoTable(
+                username: prefUtil.username,
                 dateType: 0,
                 date: DateTime.now(),
               ),
@@ -230,110 +229,106 @@ class MonthHourPage extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Table(
-        children: logic.workInfoList
-            .map((day) =>
-            TableRow(children: [
-              Container(
-                height: 40,
-                alignment: Alignment.center,
-                padding: const EdgeInsets.only(left: 10),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(4),
-                        color: day.dateType == 1
-                            ? Colors.green
-                            : day.dateType == 2
-                            ? Colors.blue
-                            : Colors.blueGrey,
-                      ),
-                      child: Text(
-                        day.dateType == 1
-                            ? ' 休 '
-                            : day.dateType == 2
-                            ? ' 节 '
-                            : ' 工 ',
-                        style: const TextStyle(
-                            color: Colors.white, fontSize: 12),
-                      ),
+        children: logic.infoList
+            .map((day) => TableRow(children: [
+                  Container(
+                    height: 40,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            borderRadius: BorderRadius.circular(4),
+                            color: day.dateType == 1
+                                ? Colors.green
+                                : day.dateType == 2
+                                    ? Colors.blue
+                                    : Colors.blueGrey,
+                          ),
+                          child: Text(
+                            day.dateType == 1
+                                ? ' 休 '
+                                : day.dateType == 2
+                                    ? ' 节 '
+                                    : ' 工 ',
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 12),
+                          ),
+                        ),
+                        Text(
+                          day.dateStr.substring(5),
+                        ),
+                      ],
                     ),
-                    Text(
-                      day.dateStr.substring(5),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                height: 40,
-                alignment: Alignment.center,
-                child: Text(
-                  day.overWorkHour > 0 ? day.overWorkHour.toString() : '—',
-                  style: const TextStyle(color: Colors.green),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Container(
-                height: 40,
-                alignment: Alignment.center,
-                child: Text(
-                  day.leaveHour > 0 ? day.leaveHour.toString() : '—',
-                  style: const TextStyle(color: Colors.red),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Container(
-                height: 40,
-                alignment: Alignment.center,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(MdiIcons.circleEditOutline,
-                            color: Colors.blue),
-                        onPressed: () => editWorkHour(context, day, logic),
-                        padding: EdgeInsets.zero,
-                      ),
-                      IconButton(
-                        icon: const Icon(MdiIcons.close, color: Colors.red),
-                        onPressed: () =>
-                            _deleteWorkInfo(context, day, logic),
-                        padding: EdgeInsets.zero,
-                      ),
-                    ],
                   ),
-                ),
-              ),
-            ]))
+                  Container(
+                    height: 40,
+                    alignment: Alignment.center,
+                    child: Text(
+                      day.overWorkHour > 0 ? day.overWorkHour.toString() : '—',
+                      style: const TextStyle(color: Colors.green),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Container(
+                    height: 40,
+                    alignment: Alignment.center,
+                    child: Text(
+                      day.leaveHour > 0 ? day.leaveHour.toString() : '—',
+                      style: const TextStyle(color: Colors.red),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Container(
+                    height: 40,
+                    alignment: Alignment.center,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(MdiIcons.circleEditOutline,
+                                color: Colors.blue),
+                            onPressed: () => editWorkHour(context, day, logic),
+                            padding: EdgeInsets.zero,
+                          ),
+                          IconButton(
+                            icon: const Icon(MdiIcons.close, color: Colors.red),
+                            onPressed: () =>
+                                _deleteWorkInfo(context, day, logic),
+                            padding: EdgeInsets.zero,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ]))
             .toList(),
       ),
     );
   }
 
-  Future<void> editWorkHour(BuildContext context, WorkInfo day,
-      MonthHourLogic logic) async {
+  Future<void> editWorkHour(
+      BuildContext context, WorkInfoTable day, MonthHourLogic logic) async {
     var info = await showWorkHourDialog(context, day);
     if (info != null) {
       L.i(info.toJson());
       if (info.objectId != null) {
-        // 编辑
-        BmobNetHelper.changeWorkInfo(info).then((value) {
-          if (value) {
-            showToast('修改成功！');
-            logic.changeMonth(logic.month);
-          } else {
-            showToast("修改失败！");
-          }
-        });
+        var value = await info.update();
+        if (value) {
+          showToast('修改成功！');
+          logic.changeMonth(logic.month);
+        } else {
+          showToast("修改失败！");
+        }
         return;
       }
-      if (logic.workInfoList
-          .any((element) => element.dateStr == info.dateStr)) {
+      if (logic.infoList.any((element) => element.dateStr == info.dateStr)) {
         showMessageDialog(
           context,
           title: "⚠️ 警告",
@@ -342,20 +337,19 @@ class MonthHourPage extends StatelessWidget {
         );
         return;
       }
-      BmobNetHelper.addWorkInfo(info).then((value) {
-        if (value) {
-          showToast('添加成功！');
-          logic.changeMonth(logic.month);
-        } else {
-          showToast("添加失败！");
-        }
-      });
+      var value = await info.install();
+      if (value) {
+        showToast('添加成功！');
+        logic.changeMonth(logic.month);
+      } else {
+        showToast("添加失败！");
+      }
     }
   }
 
   /// 删除工时记录
-  Future<void> _deleteWorkInfo(BuildContext context, WorkInfo day,
-      MonthHourLogic logic) async {
+  Future<void> _deleteWorkInfo(
+      BuildContext context, WorkInfoTable day, MonthHourLogic logic) async {
     var flag = await showOkDialog(
       context,
       title: "⚠️ 警告",
@@ -363,7 +357,7 @@ class MonthHourPage extends StatelessWidget {
       message: "确认删除${day.dateStr}的记录？",
     );
     if (flag == 1) {
-      var success = await BmobNetHelper.deleteWorkInfo(day.objectId!);
+      var success = await day.delete();
       if (success) {
         showToast("删除成功！");
         logic.changeMonth(logic.month);

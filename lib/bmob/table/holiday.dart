@@ -14,7 +14,6 @@ class YearHoliday {
           ?.map((e) => {
                 "method": "DELETE",
                 "path": "/1/classes/holidays/${e.objectId}",
-                "token": Global.init().token,
                 "body": {}
               })
           .toList() ??
