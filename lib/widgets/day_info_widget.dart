@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/context_extensions.dart';
 import 'package:mini_calendar/mini_calendar.dart';
-import 'package:mini_logger/mini_logger.dart';
-import 'package:work_hour/bmob/table/work_info.dart';
+import 'package:work_hour/bmob/tables/work_info.dart';
 
 class DayInfoWidget extends StatelessWidget {
   final DateDay day;
-  final WorkInfo? info;
+  final WorkInfoTable? info;
 
   const DayInfoWidget(this.day, {Key? key, this.info}) : super(key: key);
 

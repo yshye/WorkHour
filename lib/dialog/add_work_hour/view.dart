@@ -95,7 +95,7 @@ class AddWorkHourComponent extends StatelessWidget {
 
   void _selectDate(BuildContext context, AddWorkHourLogic logic) async {
     var day = await showDayDialog(
-        context, logic.workInfo.date,
+        context, logic.workInfo.date ?? DateTime.now(),
         title: "选择考勤日期");
     if (day != null) {
       logic.workInfo.date = day;

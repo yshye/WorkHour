@@ -3,11 +3,11 @@ import 'package:work_hour/bmob/tables/user.dart';
 
 class WorkInfoTable extends BmobTable {
   /// 考勤日期
-  late BmobDateTime _date;
+  BmobDateTime? _date;
 
-  set date(DateTime value) => _date = BmobDateTime(value);
+  set date(DateTime? value) => _date = BmobDateTime(value ?? DateTime.now());
 
-  DateTime get date => _date.dateTime;
+  DateTime? get date => _date?.dateTime;
 
   String get dateStr => date.toString().substring(0, 10);
 
@@ -23,11 +23,9 @@ class WorkInfoTable extends BmobTable {
   /// 请假工时
   late num leaveHour;
 
-  /// 用户
-  BmobPointer<UserTable>? user;
 
   @override
-  String getBmobTabName() => 'work_info';
+  String getBmobTabName() => 'work_infos';
 
   WorkInfoTable({
     DateTime? date,
@@ -38,7 +36,6 @@ class WorkInfoTable extends BmobTable {
     UserTable? user,
   }) {
     _date = BmobDateTime(date ?? DateTime.now());
-    this.user = BmobPointer(user ?? UserTable());
   }
 
   @override
@@ -49,7 +46,6 @@ class WorkInfoTable extends BmobTable {
     dateType = json['dateType'];
     overWorkHour = json['overWorkHour'];
     leaveHour = json['leaveHour'];
-    user = BmobPointer<UserTable>(UserTable())..fromJson(json['user']);
     return this;
   }
 
@@ -57,8 +53,8 @@ class WorkInfoTable extends BmobTable {
   Map<String, dynamic> createJson() => {
         ...super.createJson(),
         'username': username,
-        'user': user?.toJson(),
-        'date': _date.toJson(),
+        // 'user': user?.createJson(),
+        'date': _date?.toJson(),
         'dateType': dateType,
         'overWorkHour': overWorkHour,
         'leaveHour': leaveHour,

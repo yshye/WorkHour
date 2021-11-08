@@ -28,12 +28,12 @@ class MonthHourLogic extends GetxController {
   void changeMonth(DateMonth month) async {
     this.month = month;
 
-    BmobNetHelper.infoList(month, prefUtil.username).then((value) {
+    BmobNetHelper.infoList(month, prefUtil.user.username!).then((value) {
       infoList = value;
       update();
     });
 
-    BmobNetHelper.getHourStatistics(month, prefUtil.username).then((value) {
+    BmobNetHelper.getHourStatistics(month, prefUtil.user.username!).then((value) {
       statistics = value;
       update();
     });

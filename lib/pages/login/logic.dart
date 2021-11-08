@@ -11,7 +11,7 @@ class LoginLogic extends GetxController {
 
   @override
   void onInit() {
-    usernameController.text = prefUtil.username;
+    usernameController.text = prefUtil.user.username ?? '';
     super.onInit();
   }
 
@@ -27,11 +27,11 @@ class LoginLogic extends GetxController {
     UserTable _user = UserTable(
         username: usernameController.text, password: passwordController.text);
     var flag = await _user.login();
-    if(!flag){
+    if (!flag) {
       showToast("账户或密码错误！");
       return;
     }
-    prefUtil.username = _user.username!;
+    prefUtil.user = _user;
     prefUtil.login = true;
     Get.offAndToNamed(RouteConfig.monthHour);
   }

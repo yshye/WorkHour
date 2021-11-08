@@ -2,19 +2,26 @@ class MonthHourStatistics {
   late List<StatisticsItem> _items;
 
   /// 工作日\休息日\法定节假日加班总和
-  num sum1 = 0, sum2 = 0, sum3 = 0;
+  num _weekdays = 0, _weekend = 0, _holiday = 0;
+
+  num get weekdays => _weekdays;
+
+  num get weekend => _weekend;
+
+  num get holiday => _holiday;
 
   /// 请假总和
   num leave = 0;
 
-  MonthHourStatistics(this._items,
-      {this.sum1 = 0, this.sum2 = 0, this.sum3 = 0, this.leave = 0});
+  MonthHourStatistics(List<StatisticsItem> items) {
+    this.items = items;
+  }
 
   MonthHourStatistics.fromJson(List list) {
     items = list.map((e) => StatisticsItem.fromJson(e)).toList();
   }
 
-    List<StatisticsItem> get items => _items;
+  List<StatisticsItem> get items => _items;
 
   set items(List<StatisticsItem> items) {
     _items = items;
@@ -22,34 +29,34 @@ class MonthHourStatistics {
       leave += element.sumLeaveHour;
       switch (element.dateType) {
         case 1:
-          sum2 = element.sumOverWorkHour;
+          _weekend = element.sumOverWorkHour;
           break;
         case 2:
-          sum3 = element.sumOverWorkHour;
+          _holiday = element.sumOverWorkHour;
           break;
         default:
-          sum1 = element.sumOverWorkHour;
+          _weekdays = element.sumOverWorkHour;
           break;
       }
     }
   }
 
   num get price {
-    var _sum1 = sum1 - leave;
+    var _sum1 = _weekdays - leave;
     if (_sum1 < 0) {
-      var _sum2 = sum2 + _sum1;
-      if (_sum2 < 0) {
-        return sum3 * 16 * 3;
+      var __weekend = _weekend + _sum1;
+      if (__weekend < 0) {
+        return _holiday * 16 * 3;
       }
-      return (sum3 * 3 + _sum2 * 2) * 16;
+      return (_holiday * 3 + __weekend * 2) * 16;
     }
-    return (sum3 * 3 + sum2 * 2 + _sum1 * 1.5) * 16;
+    return (_holiday * 3 + _weekend * 2 + _sum1 * 1.5) * 16;
   }
 }
 
 class StatisticsItem {
   /// 考勤日总数
-  late int count;
+  // late int count;
 
   /// 请假总工时
   late num sumLeaveHour;
@@ -61,14 +68,14 @@ class StatisticsItem {
   late int dateType;
 
   StatisticsItem(
-    this.count,
+    // this.count,
     this.sumLeaveHour,
     this.sumOverWorkHour,
     this.dateType,
   );
 
   StatisticsItem.fromJson(Map<String, dynamic> json) {
-    count = json['_count'];
+    // count = json['_count'];
     sumLeaveHour = json['_sumLeaveHour'];
     sumOverWorkHour = json['_sumOverWorkHour'];
     dateType = json['dateType'];

@@ -4,10 +4,8 @@ import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mini_logger/mini_logger.dart';
 import 'package:oktoast/oktoast.dart';
-import 'package:work_hour/bmob/net_helper.dart';
-import 'package:work_hour/bmob/table/work_info.dart';
+import 'package:work_hour/bmob/tables/user.dart';
 import 'package:work_hour/bmob/tables/work_info.dart';
-import 'package:work_hour/common/global.dart';
 import 'package:work_hour/dialog/add_work_hour/view.dart';
 import 'package:work_hour/dialog/alert_dialog.dart';
 import 'package:work_hour/pages/route_config.dart';
@@ -28,7 +26,7 @@ class MonthHourPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leading: prefUtil.username == '27017'
+        leading: prefUtil.user.username == '27017'
             ? IconButton(
                 onPressed: () {
                   Get.toNamed(RouteConfig.holidaySetting);
@@ -133,8 +131,9 @@ class MonthHourPage extends StatelessWidget {
           editWorkHour(
               context,
               WorkInfoTable(
-                username: prefUtil.username,
+                username: prefUtil.user.username,
                 dateType: 0,
+                user: prefUtil.user,
                 date: DateTime.now(),
               ),
               logic);
@@ -188,21 +187,21 @@ class MonthHourPage extends StatelessWidget {
               height: 40,
               alignment: Alignment.center,
               padding: const EdgeInsets.all(8.0),
-              child: Text(logic.statistics.sum1.toString(),
+              child: Text(logic.statistics.weekdays.toString(),
                   style: const TextStyle(color: Colors.blueGrey)),
             ),
             Container(
               height: 40,
               alignment: Alignment.center,
               padding: const EdgeInsets.all(8.0),
-              child: Text(logic.statistics.sum2.toString(),
+              child: Text(logic.statistics.weekend.toString(),
                   style: const TextStyle(color: Colors.green)),
             ),
             Container(
               height: 40,
               alignment: Alignment.center,
               padding: const EdgeInsets.all(8.0),
-              child: Text(logic.statistics.sum3.toString(),
+              child: Text(logic.statistics.holiday.toString(),
                   style: const TextStyle(color: Colors.blue)),
             ),
             Container(
