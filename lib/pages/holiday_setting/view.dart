@@ -13,7 +13,7 @@ class HolidaySettingPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("节假日设置"),
+        title: const Text("用户列表"),
         actions: [
           IconButton(onPressed: () {}, icon: const Icon(MdiIcons.checkCircle))
         ],

@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mini_logger/mini_logger.dart';
 import 'package:oktoast/oktoast.dart';
-import 'package:work_hour/bmob/tables/user.dart';
 import 'package:work_hour/bmob/tables/work_info.dart';
 import 'package:work_hour/dialog/add_work_hour/view.dart';
 import 'package:work_hour/dialog/alert_dialog.dart';

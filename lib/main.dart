@@ -9,9 +9,10 @@ import 'utils/pref_util.dart';
 void main() async {
   await PrefUtil.init();
   BmobConfig.init(
-    'b29b32c1dd21890eb764bc87837f8378',
-    'cabdb96816af918376e6b995f610c341',
-    masterKey: '0f722971aae6e69907e684a175bcc2c6',
+    'a2e6af01ccc043d4ab8ef2ce308741b1',
+    'f5d2b1d4043834879b17214096760a91',
+    masterKey: 'd6e51f0c140e6528f25134424a79103c',
+    host: "https://api2.bmobapp.com",
     printError: (log, _) => L.e(log),
     printResponse: (log, _) => L.d(log),
   );

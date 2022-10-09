@@ -18,12 +18,12 @@ class RouteConfig {
         if (prefUtil.login) {
           return const MonthHourPage();
         }
-        return const LoginPage();
+        return LoginPage();
       },
     ),
     GetPage(
       name: login,
-      page: () => const LoginPage(),
+      page: () => LoginPage(),
     ),
     GetPage(
       name: monthHour,

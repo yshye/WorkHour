@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:work_hour/common/hues.dart';
 import 'package:work_hour/widgets/material_button_cell.dart';
 import 'package:work_hour/widgets/mini_text_field.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../bmob/tables/user.dart';
+import '../../utils/pref_util.dart';
+import '../route_config.dart';
 import 'logic.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  LoginPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final logic = Get.put(LoginLogic());
-
     return Scaffold(
       body: Container(
         height: double.infinity,
@@ -46,7 +51,7 @@ class LoginPage extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     MiniTextField(
-                      controller: logic.usernameController,
+                      controller: usernameController,
                       icon: SvgPicture.asset(
                         'assets/svg/account_name.svg',
                         color: const Color(0xff787878),
@@ -56,14 +61,14 @@ class LoginPage extends StatelessWidget {
                       keyboardType: TextInputType.phone,
                       hintText: '请输入工号',
                       onClear: () {
-                        logic.passwordController.text = '';
+                        passwordController.text = '';
                       },
                       hintTextStyle: const TextStyle(
                           fontSize: 16, color: Color(0xffcbcbcb)),
                     ),
                     const SizedBox(height: 8),
                     MiniTextField(
-                      controller: logic.passwordController,
+                      controller: passwordController,
                       icon: SvgPicture.asset(
                         'assets/svg/account_pwd.svg',
                         color: const Color(0xff787878),
@@ -79,7 +84,7 @@ class LoginPage extends StatelessWidget {
                     const SizedBox(height: 41),
                     MaterialButtonCell(
                       label: "登录",
-                      onTap: logic.checkData,
+                      onTap: checkData,
                       radius: 45,
                       height: 50,
                       fontSize: 16,
@@ -104,5 +109,26 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void checkData() async {
+    if (usernameController.text.isEmpty) {
+      showToast("用户名不可为空!");
+      return;
+    }
+    if (passwordController.text.isEmpty) {
+      showToast("密码不可为空！");
+      return;
+    }
+    UserTable _user = UserTable(
+        username: usernameController.text, password: passwordController.text);
+    var flag = await _user.login();
+    if (!flag) {
+      showToast("账户或密码错误！");
+      return;
+    }
+    prefUtil.user = _user;
+    prefUtil.login = true;
+    Get.offAndToNamed(RouteConfig.monthHour);
   }
 }
